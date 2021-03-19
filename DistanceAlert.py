@@ -2,9 +2,15 @@ import ultrasonic_distance
 import datetime
 import time
 import pygame
+import os 
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 pygame.mixer.init()
-pygame.mixer.music.load("/home/pi/python/PottyMsg.mp3")
+pygame.mixer.music.load(os.path.join(dir_path, "PottyMsg.mp3"))
+
+
+####Settings Section
 
 #Distance setting in inches
 detectionDistance = 24
@@ -14,6 +20,8 @@ scheduleEnable = False
 
 #Time setting, when to turn it off in the morning by the hour 24hr format
 shutoffTime = 9
+
+
     
 def doggy_detected():
 	import ultrasonic_distance
@@ -46,7 +54,9 @@ if scheduleEnable == True:
         	doggy_detected()
 
 if scheduleEnable == False:
-	y=1
-	while y > 0:
-		doggy_detected()
-        
+    try:
+        while True:
+            doggy_detected()
+    except KeyboardInterrupt:
+        pass
+        print("\nPeace Out")
