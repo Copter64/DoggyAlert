@@ -74,10 +74,8 @@ def doggy_detected():
 				continue
 	return averageDistance
 
-distance = distanceCalibration() - 5
-print(distance)
-print(distanceCalibration())
-print ("Distance Detected %d Calibrated Distance %d cm" % (distanceCalibration(),distance))
+
+print ("Distance Detected %d Calibrated Distance %d cm" % (distanceCalibration())
 
 if scheduleEnable:
 	while datetime.datetime.now().hour < shutoffTime:
