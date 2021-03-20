@@ -88,7 +88,7 @@ if not scheduleEnable:
         while True:
             doggy_detected()
     except KeyboardInterrupt:
-        pass
 		GPIO.cleanup()
-        print("\nPeace Out")
+		print("\nPeace Out")
+		pass
 
