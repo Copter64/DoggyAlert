@@ -18,18 +18,47 @@ detectionDistance = 24
 #Shedule setting True or False (Enables or disabled shutoff schedule)
 scheduleEnable = False
 
-#Time setting, when to turn it off in the morning by the hour 24hr format
+#Time setting, when schedule is enabled the time below will stop code from running by the hour, in 24hr format
 shutoffTime = 9
 
+def distanceCalibration():
+	#Libraries
+	import RPi.GPIO as GPIO
+	import ultrasonic_distance
+	#GPIO Mode (BOARD / BCM)
+	GPIO.setmode(GPIO.BCM)
+ 
+	#set GPIO Pins
+	GPIO_CALIBRATE_LED = 17
+	
+	#set GPIO direction (IN / OUT)
+	GPIO.setup(GPIO_CALIBRATE_LED, GPIO.OUT)
+	GPIO.output(GPIO_CALIBRATE_LED, True)
+	x = 0
+	y = 0
+	totalDistance = 0
+	averageDistance = 0
+	time.sleep(10)
 
-    
-def doggy_detected():
+	while x < 100:
+		x=x+1
+		time.sleep(.01)
+		totalDistance = ultrasonic_distance.distance() + totalDistance
+	
+	averageDistance = totalDistance / x
+	inchesDistance = averageDistance / 2.54
+	detectionDistance = inchesDistance
+return(detectionDistance)
+
+
+def doggy_detected(distanceCalibration):
 	import ultrasonic_distance
 	import pygame
 
     	x=0
     	totalDistance = 0
     	averageDistance = 0
+		detectionDistance = distanceCalibration.detectionDistance
     
     	while x < 50:
         	x=x+1
