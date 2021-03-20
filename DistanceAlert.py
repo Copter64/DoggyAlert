@@ -55,27 +55,26 @@ def doggy_detected(distanceCalibration):
 	import ultrasonic_distance
 	import pygame
 
-    	x=0
-    	totalDistance = 0
-    	averageDistance = 0
-		detectionDistance = distanceCalibration.detectionDistance
-    
-    	while x < 50:
-        	x=x+1
-        	time.sleep(.01)
-        	totalDistance = ultrasonic_distance.distance() + totalDistance
-        
-    	averageDistance = totalDistance / x
-    	inchesDistance = averageDistance / 2.54
+	totalDistance = 0
+	averageDistance = 0
+	detectionDistance = distanceCalibration.detectionDistance
+
+	while x < 50:
+		x=x+1
+		time.sleep(.01)
+		totalDistance = ultrasonic_distance.distance() + totalDistance
+	
+	averageDistance = totalDistance / x
+	inchesDistance = averageDistance / 2.54
 
 
-    	if inchesDistance < detectionDistance:
-       		pygame.mixer.music.play()
-        	while pygame.mixer.music.get_busy() == True:
-            		continue
+	if inchesDistance < detectionDistance:
+		pygame.mixer.music.play()
+		while pygame.mixer.music.get_busy() == True:
+				continue
 
 	print(averageDistance)
-    	print(inchesDistance)
+    print(inchesDistance)
 
 	
 if scheduleEnable == True:
