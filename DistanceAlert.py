@@ -73,15 +73,16 @@ def doggy_detected(distanceCalibration):
 		pygame.mixer.music.play()
 		while pygame.mixer.music.get_busy() == True:
 				continue
+	return(inchesDistance)
 
 if scheduleEnable == True:
 	while datetime.datetime.now().hour < shutoffTime:
-        	doggy_detected()
+        	doggy_detected(distanceCalibration)
 
 if scheduleEnable == False:
     try:
         while True:
-            doggy_detected()
+            doggy_detected(distanceCalibration)
     except KeyboardInterrupt:
         pass
         print("\nPeace Out")
