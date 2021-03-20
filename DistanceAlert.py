@@ -22,6 +22,7 @@ scheduleEnable = False
 #Time setting, when schedule is enabled the time below will stop code from running by the hour, in 24hr format
 shutoffTime = 9
 
+#Added a calibration function to auto calibrate detection distance after 10 seconds of code starting
 def distanceCalibration():
 	#GPIO Mode (BOARD / BCM)
 	GPIO.setmode(GPIO.BCM)
@@ -63,10 +64,10 @@ def doggy_detected():
 
 	averageDistance = totalDistance / x
 	inchesDistance = averageDistance / 2.54
-	print(averageDistance)
 	print(inchesDistance)
 
 	if inchesDistance < detectionDistance:
+		print("DETECTED: Object Distance is %d inches" % (inchesDistance))
 		pygame.mixer.music.play()
 		while pygame.mixer.music.get_busy() == True:
 				continue
