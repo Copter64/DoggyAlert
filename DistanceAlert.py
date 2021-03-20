@@ -76,12 +76,14 @@ distance = distanceCalibration()
 
 if scheduleEnable:
 	while datetime.datetime.now().hour < shutoffTime:
-        	doggy_detected(distance)
+		distanceCalibration()
+		doggy_detected()
 
 if not scheduleEnable:
     try:
         while True:
-            doggy_detected(distance)
+			distanceCalibration()
+            doggy_detected()
     except KeyboardInterrupt:
         pass
         print("\nPeace Out")
