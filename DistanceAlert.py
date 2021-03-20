@@ -42,8 +42,11 @@ def distanceCalibration():
 		x=x+1
 		time.sleep(.01)
 		totalDistance = ultrasonic_distance.distance() + totalDistance
+		print(ultrasonic_distance.distance())
+		print(totalDistance)
 	
 	averageDistance = totalDistance / x
+	print(averageDistance)
 	inchesDistance = averageDistance / 2.54
 	detectionDistance = inchesDistance
 	GPIO.output(GPIO_CALIBRATE_LED, False)
