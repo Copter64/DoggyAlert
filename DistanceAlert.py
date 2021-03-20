@@ -40,10 +40,10 @@ def distanceCalibration():
 	finalDistance = 0
 	time.sleep(5)
 
-	#this while loop runs a sample of distances 500 times and averages them
-	while x < 500:
+	#this while loop runs a sample of distances 100 times and averages them
+	while x < 100:
 		x=x+1
-		time.sleep(.01)
+		time.sleep(.05)
 		totalDistance = ultrasonic_distance.distance() + totalDistance
 		print(ultrasonic_distance.distance())
 		print(totalDistance)
