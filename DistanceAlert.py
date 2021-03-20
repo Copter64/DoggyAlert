@@ -73,7 +73,7 @@ def doggy_detected():
 	return inchesDistance
 
 distance = distanceCalibration() - 3
-print ('Calibrated Distance' + distance)
+print ("Calibrated Distance is %d inches" % (distance))
 
 if scheduleEnable:
 	while datetime.datetime.now().hour < shutoffTime:
