@@ -73,7 +73,7 @@ def doggy_detected():
 				continue
 	return inchesDistance
 
-distance = distanceCalibration() - 2
+distance = distanceCalibration() - 5
 print(distance)
 print(distanceCalibration())
 print ("Distance Detected %d Calibrated Distance %d inches" % (distanceCalibration(),distance))
