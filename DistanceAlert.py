@@ -72,7 +72,7 @@ def doggy_detected():
 				continue
 	return inchesDistance
 
-distance = distanceCalibration() - 3
+distance = distanceCalibration() - 2
 print ("Calibrated Distance is %d inches" % (distance))
 
 if scheduleEnable:
