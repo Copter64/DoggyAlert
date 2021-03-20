@@ -2,7 +2,8 @@ import ultrasonic_distance
 import datetime
 import time
 import pygame
-import os 
+import os
+import RPi.GPIO as GPIO
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -22,9 +23,6 @@ scheduleEnable = False
 shutoffTime = 9
 
 def distanceCalibration():
-	#Libraries
-	import RPi.GPIO as GPIO
-	import ultrasonic_distance
 	#GPIO Mode (BOARD / BCM)
 	GPIO.setmode(GPIO.BCM)
  
@@ -48,16 +46,15 @@ def distanceCalibration():
 	averageDistance = totalDistance / x
 	inchesDistance = averageDistance / 2.54
 	detectionDistance = inchesDistance
-	return(detectionDistance)
+	return detectionDistance
 
 
-def doggy_detected(distanceCalibration):
-	import ultrasonic_distance
-	import pygame
+def doggy_detected():
+
 
 	totalDistance = 0
 	averageDistance = 0
-	detectionDistance = distanceCalibration.detectionDistance
+	detectionDistance = distance
 
 	while x < 50:
 		x=x+1
@@ -73,16 +70,18 @@ def doggy_detected(distanceCalibration):
 		pygame.mixer.music.play()
 		while pygame.mixer.music.get_busy() == True:
 				continue
-	return(inchesDistance)
+	return inchesDistance
 
-if scheduleEnable == True:
+distance = distanceCalibration()
+
+if scheduleEnable:
 	while datetime.datetime.now().hour < shutoffTime:
-        	doggy_detected(distanceCalibration)
+        	doggy_detected(distance)
 
-if scheduleEnable == False:
+if not scheduleEnable:
     try:
         while True:
-            doggy_detected(distanceCalibration)
+            doggy_detected(distance)
     except KeyboardInterrupt:
         pass
         print("\nPeace Out")
