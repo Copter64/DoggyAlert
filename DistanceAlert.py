@@ -33,7 +33,6 @@ def distanceCalibration():
 	GPIO.setup(GPIO_CALIBRATE_LED, GPIO.OUT)
 	GPIO.output(GPIO_CALIBRATE_LED, True)
 	x = 0
-	y = 0
 	totalDistance = 0
 	averageDistance = 0
 	time.sleep(10)
@@ -46,12 +45,13 @@ def distanceCalibration():
 	averageDistance = totalDistance / x
 	inchesDistance = averageDistance / 2.54
 	detectionDistance = inchesDistance
+	GPIO.output(GPIO_CALIBRATE_LED, False)
 	return detectionDistance
 
 
 def doggy_detected():
 
-
+	x = 0
 	totalDistance = 0
 	averageDistance = 0
 	detectionDistance = distance
