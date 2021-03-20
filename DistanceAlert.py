@@ -14,7 +14,7 @@ pygame.mixer.music.load(os.path.join(dir_path, "PottyMsg.mp3"))
 ####Settings Section
 
 #Distance setting in inches
-detectionDistance = 24
+# detectionDistance = 24
 
 #Shedule setting True or False (Enables or disabled shutoff schedule)
 scheduleEnable = False
@@ -76,13 +76,11 @@ distance = distanceCalibration()
 
 if scheduleEnable:
 	while datetime.datetime.now().hour < shutoffTime:
-		distanceCalibration()
 		doggy_detected()
 
 if not scheduleEnable:
     try:
         while True:
-			distanceCalibration()
             doggy_detected()
     except KeyboardInterrupt:
         pass
