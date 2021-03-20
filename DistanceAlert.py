@@ -13,7 +13,7 @@ pygame.mixer.music.load(os.path.join(dir_path, "PottyMsg.mp3"))
 
 ####Settings Section
 
-#Distance setting in inches
+#Distance setting in centimeters
 # detectionDistance = 24
 
 #Shedule setting True or False (Enables or disabled shutoff schedule)
@@ -23,6 +23,7 @@ scheduleEnable = False
 shutoffTime = 9
 
 #Added a calibration function to auto calibrate detection distance after 10 seconds of code starting
+
 def distanceCalibration():
 	#GPIO Mode (BOARD / BCM)
 	GPIO.setmode(GPIO.BCM)
@@ -36,9 +37,11 @@ def distanceCalibration():
 	x = 0
 	totalDistance = 0
 	averageDistance = 0
-	time.sleep(10)
+	finalDistance = 0
+	time.sleep(5)
 
-	while x < 100:
+	#this while loop runs a sample of distances 500 times and averages them
+	while x < 500:
 		x=x+1
 		time.sleep(.01)
 		totalDistance = ultrasonic_distance.distance() + totalDistance
@@ -46,11 +49,9 @@ def distanceCalibration():
 		print(totalDistance)
 	
 	averageDistance = totalDistance / x
-	print(averageDistance)
-	inchesDistance = averageDistance / 2.54
-	detectionDistance = inchesDistance
+	finalDistance = averageDistance - 10
 	GPIO.output(GPIO_CALIBRATE_LED, False)
-	return detectionDistance
+	return finalDistance
 
 
 def doggy_detected():
@@ -58,28 +59,25 @@ def doggy_detected():
 	x = 0
 	totalDistance = 0
 	averageDistance = 0
-	detectionDistance = distance
+	detectionDistance = finalDistance
 
 	while x < 50:
 		x=x+1
 		time.sleep(.01)
 		totalDistance = ultrasonic_distance.distance() + totalDistance
-
 	averageDistance = totalDistance / x
-	inchesDistance = averageDistance / 2.54
-	print(inchesDistance)
 
-	if inchesDistance < detectionDistance:
-		print("DETECTED: Object Distance is %d inches" % (inchesDistance))
+	if averageDistance < detectionDistance:
+		print("DETECTED: Object Distance is %d cm" % (averageDistance))
 		pygame.mixer.music.play()
 		while pygame.mixer.music.get_busy() == True:
 				continue
-	return inchesDistance
+	return averageDistance
 
 distance = distanceCalibration() - 5
 print(distance)
 print(distanceCalibration())
-print ("Distance Detected %d Calibrated Distance %d inches" % (distanceCalibration(),distance))
+print ("Distance Detected %d Calibrated Distance %d cm" % (distanceCalibration(),distance))
 
 if scheduleEnable:
 	while datetime.datetime.now().hour < shutoffTime:
