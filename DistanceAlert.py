@@ -74,11 +74,14 @@ def doggy_detected():
 	return inchesDistance
 
 distance = distanceCalibration() - 2
+print(distance)
+print(distanceCalibration())
 print ("Distance Detected %d Calibrated Distance %d inches" % (distanceCalibration(),distance))
 
 if scheduleEnable:
 	while datetime.datetime.now().hour < shutoffTime:
 		doggy_detected()
+	GPIO.cleanup()
 
 if not scheduleEnable:
     try:
@@ -86,5 +89,6 @@ if not scheduleEnable:
             doggy_detected()
     except KeyboardInterrupt:
         pass
+		GPIO.cleanup()
         print("\nPeace Out")
 
