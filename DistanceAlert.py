@@ -74,7 +74,7 @@ def doggy_detected():
 				continue
 	return averageDistance
 
-outputdistance = distanceCalibration.finalDistance
+outputdistance = distanceCalibration().finalDistance
 print ("Distance Detected %d Calibrated Distance %d cm" % (outputdistance))
 
 if scheduleEnable:
