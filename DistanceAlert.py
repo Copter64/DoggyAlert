@@ -59,7 +59,7 @@ def doggy_detected():
 	x = 0
 	totalDistance = 0
 	averageDistance = 0
-	detectionDistance = finalDistance
+	detectionDistance = outputdistance
 
 	while x < 50:
 		x=x+1
