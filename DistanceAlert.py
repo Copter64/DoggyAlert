@@ -68,7 +68,7 @@ def doggy_detected():
 	averageDistance = totalDistance / x
 
 	if averageDistance < detectionDistance:
-		print("DETECTED: Object Distance is %d cm" % (averageDistance))
+		print("DETECTED: Object Distance is %d cm at %dh%dm%ds" % (averageDistance,datetime.datetime.now().hour,datetime.datetime.now().minute,datetime.datetime.now().second))
 		pygame.mixer.music.play()
 		while pygame.mixer.music.get_busy() == True:
 				continue
@@ -90,4 +90,3 @@ if not scheduleEnable:
 		GPIO.cleanup()
 		print("\nPeace Out")
 		pass
-
