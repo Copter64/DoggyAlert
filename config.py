@@ -8,4 +8,4 @@ SHUTOFF_HOUR = 9
 SLEEP_DELAY = 0.025
 
 # File that will be played
-SOUND_FILE = 'PottyMsg.mp3'
+SOUND_FILE = 'PottyMsg.wav'

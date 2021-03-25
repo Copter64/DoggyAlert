@@ -89,8 +89,8 @@ def load_sound_and_init_mixer():
     dir_path = Path.cwd()
     sound_path = dir_path.joinpath(SOUND_FILE)
 
-    pygame.mixer.music.load(os.path.join(dir_path, "PottyMsg.mp3"))
     pygame.mixer.init()
+    pygame.mixer.music.load(os.path.join(dir_path, "PottyMsg.wav"))
     pygame.mixer.music.load(str(sound_path))
 
 
