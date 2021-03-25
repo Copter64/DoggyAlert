@@ -18,7 +18,6 @@ pygame.mixer.music.load(os.path.join(dir_path, "PottyMsg.mp3"))
 
 #Shedule setting True or False (Enables or disabled shutoff schedule)
 scheduleEnable = False
-
 #Time setting, when schedule is enabled the time below will stop code from running by the hour, in 24hr format
 shutoffTime = 9
 
@@ -72,6 +71,8 @@ def doggy_detected():
 		pygame.mixer.music.play()
 		while pygame.mixer.music.get_busy() == True:
 				continue
+
+	time.sleep(.1)
 	return averageDistance
 
 outputdistance = distanceCalibration()
