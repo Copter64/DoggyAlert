@@ -49,7 +49,7 @@ def distance_calibration():
 
 
 def doggy_detected(output_distance: float) -> float:
-    """Please make a TLDR comment of what is happening here
+    """Function used to both reduce sensor jitter/noise and then play a sound when the distance detected is less than the calibrated distance
 
     Args:
         output_distance:
@@ -62,7 +62,7 @@ def doggy_detected(output_distance: float) -> float:
     total_distance = 0
     detection_distance = output_distance
 
-    while x < 50:
+    while x < 20:
         x = x + 1
         time.sleep(SLEEP_DELAY)
         total_distance = ultrasonic_distance.distance() + total_distance
