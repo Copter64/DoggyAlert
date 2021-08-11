@@ -1,7 +1,12 @@
 #Libraries
 import RPi.GPIO as GPIO
 import time
-import config
+from config import SOUND_FILE, SHUTOFF_HOUR, SLEEP_DELAY, SHUTOFF_ENABLED
+import datetime
+from pathlib import Path
+import pathlib
+import os
+
  
 #GPIO Mode (BOARD / BCM)
 GPIO.setmode(GPIO.BCM)
@@ -53,6 +58,7 @@ def distance_calibration():
     # set GPIO Pins
 
     # set GPIO direction (IN / OUT)
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(gpio_calibrate_led, GPIO.OUT)
     GPIO.output(gpio_calibrate_led, True)
     x = 0
@@ -62,17 +68,17 @@ def distance_calibration():
     # this while loop runs a sample of distances 100 times and averages them
     while x < 100:
         x += 1
-        time.sleep(config.SLEEP_DELAY)
+        time.sleep(SLEEP_DELAY)
         total_distance = distance() + total_distance
         print(distance())
-        print(total_distance)
 
     average_distance = total_distance / x
     final_distance = average_distance - 10
+    print(f"The calibrated distance is {average_distance}")
     GPIO.output(gpio_calibrate_led, False)
     return final_distance
 
-def doggy_detected(output_distance: float) -> float:
+def doggy_detected(output_distance):
     """Please make a TLDR comment of what is happening here
 
     Args:
@@ -88,8 +94,8 @@ def doggy_detected(output_distance: float) -> float:
 
     while x < 50:
         x = x + 1
-        time.sleep(config.SLEEP_DELAY)
-        total_distance = ultrasonic_distance.distance() + total_distance
+        time.sleep(SLEEP_DELAY)
+        total_distance = distance() + total_distance
 
     average_distance = total_distance / x
 
@@ -99,15 +105,77 @@ def doggy_detected(output_distance: float) -> float:
             datetime.datetime.now().second))
         pygame.mixer.music.play()
         while pygame.mixer.music.get_busy():
-            time.sleep(config.SLEEP_DELAY)
+            time.sleep(SLEEP_DELAY)
             continue
     return average_distance
 
+def load_sound_and_init_mixer():
+    """Loads sound and initializes mixer with sound file.
+
+    Returns:
+
+    """
+    dir_path = Path.cwd()
+    sound_path = dir_path.joinpath(SOUND_FILE)
+
+    pygame.mixer.init()
+    # pygame.mixer.music.load(os.path.join(dir_path, "PottyMsg.wav"))
+    pygame.mixer.music.load(str(sound_path))
+
+def doggy_detected_loop(output_distance: float):
+    """Doggy detection loop helper.
+
+    Args:
+        output_distance: Detected output distance
+
+    Returns:
+
+    """
+    doggy_detected(output_distance=output_distance)
+    time.sleep(SLEEP_DELAY)
+
+def _run():
+    """Main loop pulled out from both of file.
+
+    *TODO Make sure to improve the definition of this.
+
+    Returns:
+
+    """
+    output_distance = distance_calibration()
+    print(f'Calibrated Distance {output_distance} cm')
+
+    if SLEEP_DELAY:
+        while datetime.datetime.now().hour < SHUTOFF_HOUR:
+            doggy_detected_loop(output_distance=output_distance)
+        GPIO.cleanup()
+    else:
+        try:
+            while True:
+                doggy_detected_loop(output_distance=output_distance)
+        except KeyboardInterrupt:
+            GPIO.cleanup()
+            print("\nPeace Out")
+            pass
+
+def run():
+    """Runs main program.
+
+    Returns:
+
+    """
+    # load_sound_and_init_mixer()
+    _run()
+
+
 if __name__ == '__main__':
+    run()
+
     try:
         detectdistance = distance_calibration()
+        
         while True:
-            doggy_detected(detectdistance)
+            print(doggy_detected(detectdistance))
             time.sleep(1)
  
         # Reset by pressing CTRL + C

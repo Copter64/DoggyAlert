@@ -2,6 +2,7 @@
 DETECTION_DISTANCE = 24
 
 # Time setting, when schedule is enabled the time below will stop code from running by the hour, in 24hr format
+SHUTOFF_ENABLED = False
 SHUTOFF_HOUR = 9
 
 # Delay between while statement running.
