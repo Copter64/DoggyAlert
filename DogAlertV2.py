@@ -6,21 +6,21 @@ import datetime
 from pathlib import Path
 import pathlib
 import os
+import pygame
 
- 
-#GPIO Mode (BOARD / BCM)
-GPIO.setmode(GPIO.BCM)
- 
+
 #set GPIO Pins
 GPIO_TRIGGER = 18
 GPIO_ECHO = 24
 gpio_calibrate_led = 17
  
-#set GPIO direction (IN / OUT)
-GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
-GPIO.setup(GPIO_ECHO, GPIO.IN)
- 
+
 def distance():
+    #GPIO Mode (BOARD / BCM)
+    GPIO.setmode(GPIO.BCM)
+    # set GPIO direction (IN / OUT)
+    GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
+    GPIO.setup(GPIO_ECHO, GPIO.IN)
     # set Trigger to HIGH
     GPIO.output(GPIO_TRIGGER, True)
  
@@ -57,8 +57,10 @@ def distance_calibration():
     """
     # set GPIO Pins
 
-    # set GPIO direction (IN / OUT)
+    
+    #GPIO Mode (BOARD / BCM)
     GPIO.setmode(GPIO.BCM)
+    # set GPIO direction (IN / OUT)
     GPIO.setup(gpio_calibrate_led, GPIO.OUT)
     GPIO.output(gpio_calibrate_led, True)
     x = 0
@@ -70,12 +72,13 @@ def distance_calibration():
         x += 1
         time.sleep(SLEEP_DELAY)
         total_distance = distance() + total_distance
-        print(distance())
+        # print(distance())
 
     average_distance = total_distance / x
     final_distance = average_distance - 10
     print(f"The calibrated distance is {average_distance}")
     GPIO.output(gpio_calibrate_led, False)
+    print("Calibration Loop Has Ended")
     return final_distance
 
 def doggy_detected(output_distance):
@@ -92,7 +95,8 @@ def doggy_detected(output_distance):
     total_distance = 0
     detection_distance = output_distance
 
-    while x < 50:
+    # Used in order to clean up the noise from the ultrasonic sensor, averages 25 samples
+    while x < 25:
         x = x + 1
         time.sleep(SLEEP_DELAY)
         total_distance = distance() + total_distance
@@ -114,13 +118,18 @@ def load_sound_and_init_mixer():
 
     Returns:
 
+    Needs fixed, currently broken
+
     """
     dir_path = Path.cwd()
     sound_path = dir_path.joinpath(SOUND_FILE)
-
     pygame.mixer.init()
-    # pygame.mixer.music.load(os.path.join(dir_path, "PottyMsg.wav"))
-    pygame.mixer.music.load(str(sound_path))
+    pygame.mixer.music.load(SOUND_FILE)
+
+# Checking to see if any of this is needed
+    # pygame.mixer.init()
+    # os.path.join(dir_path, "PottyMsg.wav")
+    # pygame.mixer.music.load(str(sound_path))
 
 def doggy_detected_loop(output_distance: float):
     """Doggy detection loop helper.
@@ -135,6 +144,7 @@ def doggy_detected_loop(output_distance: float):
     time.sleep(SLEEP_DELAY)
 
 def _run():
+    print("running main run_ loop")
     """Main loop pulled out from both of file.
 
     *TODO Make sure to improve the definition of this.
@@ -143,43 +153,45 @@ def _run():
 
     """
     output_distance = distance_calibration()
-    print(f'Calibrated Distance {output_distance} cm')
+    print(f"Detection Distance Set to within {output_distance} cm")
 
-    if SLEEP_DELAY:
+    if SHUTOFF_ENABLED:
         while datetime.datetime.now().hour < SHUTOFF_HOUR:
             doggy_detected_loop(output_distance=output_distance)
         GPIO.cleanup()
+        print("Loop Broken at ShutOff Time")
     else:
         try:
             while True:
                 doggy_detected_loop(output_distance=output_distance)
+                print("Looking for doggos")
         except KeyboardInterrupt:
             GPIO.cleanup()
             print("\nPeace Out")
             pass
 
-def run():
+def runstart():
     """Runs main program.
 
     Returns:
 
     """
-    # load_sound_and_init_mixer()
+    load_sound_and_init_mixer()
     _run()
 
 
 if __name__ == '__main__':
-    run()
+    runstart()
 
-    try:
-        detectdistance = distance_calibration()
+    # try:
+    #     output_distance = distance_calibration()
         
-        while True:
-            print(doggy_detected(detectdistance))
-            time.sleep(1)
+    #     while True:
+    #         doggy_detected(output_distance)
+    #         time.sleep(1)
  
-        # Reset by pressing CTRL + C
-    except KeyboardInterrupt:
-        print("Measurement stopped by User")
-        GPIO.cleanup()
+    #     # Reset by pressing CTRL + C
+    # except KeyboardInterrupt:
+    #     print("Measurement stopped by User")
+    #     GPIO.cleanup()
 
